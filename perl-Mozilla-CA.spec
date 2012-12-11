@@ -1,19 +1,20 @@
 %define upstream_name    Mozilla-CA
-%define upstream_version 20110409
+%define upstream_version 20120823
 
-Name:       perl-%{upstream_name}
-Version:    %perl_convert_version %{upstream_version}
-Release:    %mkrel 1
+Name:		perl-%{upstream_name}
+Version:	%perl_convert_version %{upstream_version}
+Release:	1
 
-Summary:    Mozilla's CA cert bundle in PEM format
-License:    GPL+ or Artistic
-Group:      Development/Perl
-Url:        http://search.cpan.org/dist/%{upstream_name}
-Source0:    http://www.cpan.org/modules/by-module/Mozilla/%{upstream_name}-%{upstream_version}.tar.gz
+Summary:	Mozilla's CA cert bundle in PEM format
+License:	GPL+ or Artistic
+Group:		Development/Perl
+Url:		http://search.cpan.org/dist/%{upstream_name}
+Source0:	http://www.cpan.org/modules/by-module/Mozilla/%{upstream_name}-%{upstream_version}.tar.gz
 
-BuildRequires: perl(Test)
-BuildArch: noarch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}
+BuildRequires:	perl-devel
+BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(Test)
+BuildArch:	noarch
 
 %description
 Mozilla::CA provides a copy of Mozilla's bundle of Certificate Authority
@@ -28,24 +29,17 @@ The module provide a single function:
 %setup -q -n %{upstream_name}-%{upstream_version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
-
+perl Makefile.PL INSTALLDIRS=vendor
 %make
 
 %check
 %make test
 
 %install
-rm -rf %buildroot
 %makeinstall_std
 
-%clean
-rm -rf %buildroot
-
 %files
-%defattr(-,root,root)
-%doc META.yml README
+%doc Changes META.json META.yml MYMETA.yml README
 %{_mandir}/man3/*
-%perl_vendorlib/*
-
+%{perl_vendorlib}/*
 
