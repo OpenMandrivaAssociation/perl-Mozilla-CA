@@ -1,5 +1,5 @@
 %define upstream_name    Mozilla-CA
-%define upstream_version 20120823
+%define upstream_version 20130114
 
 Name:		perl-%{upstream_name}
 Version:	%perl_convert_version %{upstream_version}
