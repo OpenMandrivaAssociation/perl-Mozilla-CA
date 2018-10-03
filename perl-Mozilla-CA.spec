@@ -10,7 +10,7 @@ License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		http://search.cpan.org/dist/%{upstream_name}
 Source0:	http://www.cpan.org/modules/by-module/Mozilla/%{upstream_name}-%{upstream_version}.tar.gz
-
+Patch1:		Mozilla-CA-20180117-Redirect-to-ca-certificates-bundle.patch
 BuildRequires:	perl-devel
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(Test)
@@ -27,9 +27,15 @@ The module provide a single function:
 
 %prep
 %setup -q -n %{upstream_name}-%{upstream_version}
+%apply_patches
+# Do not distribute Mozilla downloader, we take certificates from
+# the rootcerts package
+rm mk-ca-bundle.pl
+sed -i '/^mk-ca-bundle.pl$/d' MANIFEST
+
 
 %build
-perl Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
 %make
 
 %check
@@ -39,7 +45,7 @@ perl Makefile.PL INSTALLDIRS=vendor
 %makeinstall_std
 
 %files
-%doc Changes META.json META.yml MYMETA.yml README
+%doc Changes META.json META.yml README
 %{_mandir}/man3/*
 %{perl_vendorlib}/*
 
