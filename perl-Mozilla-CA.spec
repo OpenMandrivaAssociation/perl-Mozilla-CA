@@ -1,9 +1,9 @@
 %define upstream_name    Mozilla-CA
-%define upstream_version 20130114
+%define upstream_version 20180117
 
 Name:		perl-%{upstream_name}
 Version:	%perl_convert_version %{upstream_version}
-Release:	5
+Release:	1
 
 Summary:	Mozilla's CA cert bundle in PEM format
 License:	GPL+ or Artistic
