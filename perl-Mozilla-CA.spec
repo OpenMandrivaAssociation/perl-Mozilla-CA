@@ -27,7 +27,7 @@ The module provide a single function:
 
 %prep
 %setup -q -n %{upstream_name}-%{upstream_version}
-%apply_patches
+%autopatch -p1
 # Do not distribute Mozilla downloader, we take certificates from
 # the rootcerts package
 rm mk-ca-bundle.pl
