@@ -1,15 +1,13 @@
 %define upstream_name    Mozilla-CA
-%define upstream_version 20250602
-
 Name:		perl-%{upstream_name}
-Version:	%{upstream_version}
-Release:	1
+Version:	20250602
+Release:	2
 
 Summary:	Mozilla's CA cert bundle in PEM format
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		https://github.com/libwww-perl/Mozilla-CA
-Source0:	https://cpan.metacpan.org/authors/id/L/LW/LWP/Mozilla-CA-%{upstream_version}.tar.gz
+Source0:	https://cpan.metacpan.org/authors/id/L/LW/LWP/Mozilla-CA-%{version}.tar.gz
 Patch1:		Mozilla-CA-20180117-Redirect-to-ca-certificates-bundle.patch
 BuildRequires:	make
 BuildRequires:	perl-devel
@@ -27,7 +25,7 @@ The module provide a single function:
 * SSL_ca_file()
 
 %prep
-%setup -q -n %{upstream_name}-%{upstream_version}
+%setup -q -n %{upstream_name}-%{version}
 %autopatch -p1
 # Do not distribute Mozilla downloader, we take certificates from
 # the rootcerts package
