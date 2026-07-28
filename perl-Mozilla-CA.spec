@@ -1,18 +1,18 @@
 %define upstream_name    Mozilla-CA
 Name:		perl-%{upstream_name}
 Version:	20250602
-Release:	2
+Release:	3
 
 Summary:	Mozilla's CA cert bundle in PEM format
 License:	GPL+ or Artistic
 Group:		Development/Perl
 Url:		https://github.com/libwww-perl/Mozilla-CA
 Source0:	https://cpan.metacpan.org/authors/id/L/LW/LWP/Mozilla-CA-%{version}.tar.gz
-Patch1:		Mozilla-CA-20180117-Redirect-to-ca-certificates-bundle.patch
 BuildRequires:	make
 BuildRequires:	perl-devel
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(Test)
+Requires: ca-certificates
 BuildArch:	noarch
 
 %description
@@ -26,12 +26,35 @@ The module provide a single function:
 
 %prep
 %setup -q -n %{upstream_name}-%{version}
-%autopatch -p1
-# Do not distribute Mozilla downloader, we take certificates from
-# the rootcerts package
-rm mk-ca-bundle.pl
-sed -i '/^mk-ca-bundle.pl$/d' MANIFEST
+# Redirect SSL_ca_file() to system ca-certificates bundle
+cat > lib/Mozilla/CA.pm << 'CAEOF'
+package Mozilla::CA;
+use strict;
+use warnings;
 
+our $VERSION = '20250602';
+
+use File::Spec ();
+
+sub SSL_ca_file {
+    return File::Spec->catfile('/etc/pki/tls/certs/ca-bundle.crt');
+}
+
+1;
+CAEOF
+# Exclude bundled cacert.pem from packaging
+cat >> Makefile.PL << 'MFEOF'
+
+package MY;
+sub libscan {
+    my $name = shift->SUPER::libscan(@_);
+    if ($name =~ /cacert\.pem\z/) { $name = '' }
+    return $name;
+}
+MFEOF
+# Do not ship Mozilla downloader scripts
+rm -f mk-ca-bundle.pl maint/mk-ca-bundle.pl 2>/dev/null || true
+sed -i '/mk-ca-bundle.pl/d' MANIFEST 2>/dev/null || true
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
@@ -44,7 +67,7 @@ perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
 %makeinstall_std
 
 %files
-%doc Changes META.json META.yml README
+%doc Changes README
 %{_mandir}/man3/*
 %{perl_vendorlib}/*
 
