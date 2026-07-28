@@ -1,7 +1,7 @@
 %define upstream_name    Mozilla-CA
 Name:		perl-%{upstream_name}
 Version:	20250602
-Release:	3
+Release:	4
 
 Summary:	Mozilla's CA cert bundle in PEM format
 License:	GPL+ or Artistic
@@ -12,6 +12,8 @@ BuildRequires:	make
 BuildRequires:	perl-devel
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(Test)
+BuildRequires:	perl(Test::More)
+BuildRequires:	perl-Test-Simple
 Requires: ca-certificates
 BuildArch:	noarch
 
