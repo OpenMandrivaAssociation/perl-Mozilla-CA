@@ -1,7 +1,7 @@
 %define upstream_name    Mozilla-CA
 Name:		perl-%{upstream_name}
 Version:	20250602
-Release:	4
+Release:	5
 
 Summary:	Mozilla's CA cert bundle in PEM format
 License:	GPL+ or Artistic
@@ -70,6 +70,5 @@ perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
 
 %files
 %doc Changes README
-%{_mandir}/man3/*
 %{perl_vendorlib}/*
 
